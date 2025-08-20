@@ -2,11 +2,6 @@
 
 Un jeu de tower defense inspiré de Battle Cats, développé en HTML5, CSS et JavaScript vanilla.
 
-![Battle Cats 2D](https://img.shields.io/badge/Status-En%20développement-green)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
-
 ## 🎮 À propos du jeu
 
 Battle Cats 2D est un jeu de stratégie en temps réel où vous devez défendre votre tour alliée contre les vagues d'ennemis. Recrutez différents types de chats, améliorez votre économie et détruisez la tour ennemie pour remporter la victoire !
@@ -123,28 +118,11 @@ Le projet suit une architecture modulaire avec séparation des responsabilités 
 2. Ajoutez le script dans `index.html`
 3. Intégrez-le dans le système existant
 
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Pour contribuer :
-
-1. Fork le projet
-2. Créez une branche pour votre fonctionnalité
-3. Committez vos changements
-4. Poussez vers la branche
-5. Ouvrez une Pull Request
-
-## 📝 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
 ## 🙏 Remerciements
 
 - Inspiré par le jeu original Battle Cats de PONOS Corporation
 - Développé avec passion pour l'apprentissage du développement web
 
-## 📞 Contact
-
-Pour toute question ou suggestion, n'hésitez pas à ouvrir une issue sur GitHub.
 
 ---
 
