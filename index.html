@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Battle Cats 2D</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Interface de jeu -->
+        <div id="game-ui">
+            <div id="ui-top">
+                <div id="money-section">
+                    <div id="money-display">
+                        <span id="money-icon">💰</span>
+                        <span id="money-amount">50/100</span>
+                    </div>
+                    <div id="money-level">
+                        <span>Niveau <span id="money-level-number">1</span></span>
+                    </div>
+                </div>
+                
+                                    <div id="game-title">
+                        <h1>🐱 BATTLE CATS 2D 🏰</h1>
+                        <p>Défendez votre tour !</p>
+                        <div id="level-info">
+                            <span id="current-level">Niveau 1</span>
+                            <span id="level-progress">Détruisez la tour ennemie !</span>
+                        </div>
+                    </div>
+                    
+                    <div id="pause-section">
+                        <button id="pause-btn" class="control-btn" onclick="pauseMenu.togglePause()">
+                            ⏸️ PAUSE
+                        </button>
+                    </div>
+            </div>
+            
+            <!-- Barres de vie des tours -->
+            <div id="tower-health">
+                <div id="ally-tower-health">
+                    <span>Tour Alliée</span>
+                    <div class="health-bar">
+                        <div class="health-fill" id="ally-health-fill"></div>
+                    </div>
+                    <span id="ally-health-text">1000/1000</span>
+                </div>
+                
+                <div id="enemy-tower-health">
+                    <span>Tour Ennemie</span>
+                    <div class="health-bar">
+                        <div class="health-fill" id="enemy-health-fill"></div>
+                    </div>
+                    <span id="enemy-health-text">1000/1000</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Terrain de jeu principal -->
+        <canvas id="game-canvas" width="1200" height="600"></canvas>
+        
+        <!-- Menu de sélection des unités -->
+        <div id="unit-menu">
+            <div class="unit-button" data-unit="basic" data-cost="50">
+                <img src="assets/cats/basic_idle.png" alt="Chat Basic">
+                <span class="unit-cost">50💰</span>
+            </div>
+            <div class="unit-button" data-unit="tank" data-cost="100">
+                <img src="assets/cats/tank_idle.png" alt="Chat Tank">
+                <span class="unit-cost">100💰</span>
+            </div>
+            <div class="unit-button" data-unit="attack" data-cost="150">
+                <img src="assets/cats/attack_idle.png" alt="Chat Attaquant">
+                <span class="unit-cost">150💰</span>
+            </div>
+        </div>
+        
+        <!-- Bouton d'upgrade en bas à gauche -->
+        <div id="upgrade-section">
+            <button id="upgrade-money-btn" class="upgrade-btn-main">
+                <img src="assets/effects/efficiency.png" alt="Efficiency" class="upgrade-icon">
+                <div class="upgrade-text">
+                    <span class="upgrade-label">Économie</span>
+                    <span class="upgrade-cost-display"><span id="upgrade-cost">40</span>💰</span>
+                </div>
+            </button>
+        </div>
+    </div>
+    
+            <!-- Scripts -->
+        <script src="js/assets.js"></script>
+        <script src="js/economy.js"></script>
+        <script src="js/units.js"></script>
+        <script src="js/levelManager.js"></script>
+        <script src="js/levelSelector.js"></script>
+        <script src="js/pauseMenu.js"></script>
+        <script src="js/game.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/main.js"></script>
+</body>
+</html>

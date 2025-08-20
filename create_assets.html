@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'Assets - Battle Cats 2D</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .asset-item {
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .asset-item canvas {
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+        .download-link {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .download-link:hover {
+            background: #1976D2;
+        }
+        #status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: #e7f3ff;
+            border: 1px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Générateur d'Assets - Battle Cats 2D</h1>
+        <p>Cet outil génère des sprites placeholder pour votre jeu Battle Cats 2D.</p>
+        
+        <button onclick="generateAllAssets()">🎨 Générer tous les assets</button>
+        <button onclick="downloadAll()">📦 Télécharger tout</button>
+        
+        <div id="status"></div>
+        
+        <div id="asset-grid" class="asset-grid"></div>
+    </div>
+
+    <script>
+        const assetDefinitions = [
+            // Chats
+            { category: 'cats', name: 'basic_idle', width: 64, height: 64, color: '#4CAF50', text: '🐱', label: 'Chat Basic' },
+            { category: 'cats', name: 'tank_idle', width: 64, height: 64, color: '#2196F3', text: '🛡️', label: 'Chat Tank' },
+            { category: 'cats', name: 'attack_idle', width: 64, height: 64, color: '#FF5722', text: '⚔️', label: 'Chat Attaque' },
+            { category: 'cats', name: 'enemy_basic_idle', width: 64, height: 64, color: '#9C27B0', text: '👹', label: 'Ennemi Basic' },
+            
+            // Tours
+            { category: 'towers', name: 'ally_tower', width: 80, height: 120, color: '#4CAF50', text: '🏰', label: 'Tour Alliée' },
+            { category: 'towers', name: 'enemy_tower', width: 80, height: 120, color: '#F44336', text: '🏯', label: 'Tour Ennemie' },
+            
+            // Fonds
+            { category: 'backgrounds', name: 'battlefield', width: 400, height: 200, color: '#87CEEB', text: '🌍', label: 'Champ de bataille' },
+            
+            // Effets
+            { category: 'effects', name: 'explosion', width: 48, height: 48, color: '#FF6B35', text: '💥', label: 'Explosion' },
+            { category: 'effects', name: 'coin', width: 48, height: 48, color: '#FFD700', text: '💰', label: 'Pièce' }
+        ];
+        
+        let generatedAssets = [];
+        
+        function createSprite(definition) {
+            const canvas = document.createElement('canvas');
+            canvas.width = definition.width;
+            canvas.height = definition.height;
+            const ctx = canvas.getContext('2d');
+            
+            // Fond coloré avec gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, definition.height);
+            gradient.addColorStop(0, definition.color);
+            gradient.addColorStop(1, shadeColor(definition.color, -20));
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, definition.width, definition.height);
+            
+            // Bordure
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(1, 1, definition.width - 2, definition.height - 2);
+            
+            // Ombre interne
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(2, 2, definition.width - 4, definition.height - 4);
+            
+            // Texte/Emoji
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = `${Math.min(definition.width, definition.height) / 2}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(definition.text, definition.width / 2, definition.height / 2);
+            
+            // Reflet
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.fillRect(0, 0, definition.width, definition.height / 3);
+            
+            return canvas;
+        }
+        
+        function shadeColor(color, percent) {
+            const R = parseInt(color.substring(1, 3), 16);
+            const G = parseInt(color.substring(3, 5), 16);
+            const B = parseInt(color.substring(5, 7), 16);
+            
+            const newR = Math.max(0, Math.min(255, R + (R * percent / 100)));
+            const newG = Math.max(0, Math.min(255, G + (G * percent / 100)));
+            const newB = Math.max(0, Math.min(255, B + (B * percent / 100)));
+            
+            return "#" + 
+                Math.round(newR).toString(16).padStart(2, '0') +
+                Math.round(newG).toString(16).padStart(2, '0') +
+                Math.round(newB).toString(16).padStart(2, '0');
+        }
+        
+        function generateAllAssets() {
+            const grid = document.getElementById('asset-grid');
+            const status = document.getElementById('status');
+            
+            grid.innerHTML = '';
+            generatedAssets = [];
+            
+            status.innerHTML = '🎨 Génération des assets en cours...';
+            
+            assetDefinitions.forEach((def, index) => {
+                setTimeout(() => {
+                    const canvas = createSprite(def);
+                    
+                    // Créer l'élément d'affichage
+                    const item = document.createElement('div');
+                    item.className = 'asset-item';
+                    
+                    const displayCanvas = canvas.cloneNode();
+                    const displayCtx = displayCanvas.getContext('2d');
+                    displayCtx.drawImage(canvas, 0, 0);
+                    
+                    item.innerHTML = `
+                        <div>${def.label}</div>
+                        <div>${def.category}/${def.name}</div>
+                        <a href="${canvas.toDataURL()}" download="${def.name}.png" class="download-link">📥 Télécharger</a>
+                    `;
+                    
+                    item.insertBefore(displayCanvas, item.firstChild);
+                    grid.appendChild(item);
+                    
+                    // Stocker pour le téléchargement en lot
+                    generatedAssets.push({
+                        name: `${def.name}.png`,
+                        dataUrl: canvas.toDataURL(),
+                        category: def.category
+                    });
+                    
+                    if (index === assetDefinitions.length - 1) {
+                        status.innerHTML = `✅ ${assetDefinitions.length} assets générés avec succès !`;
+                    }
+                }, index * 100);
+            });
+        }
+        
+        function downloadAll() {
+            if (generatedAssets.length === 0) {
+                alert('Veuillez d\'abord générer les assets !');
+                return;
+            }
+            
+            const status = document.getElementById('status');
+            status.innerHTML = '📦 Téléchargement en cours...';
+            
+            generatedAssets.forEach((asset, index) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = asset.dataUrl;
+                    link.download = asset.name;
+                    link.click();
+                    
+                    if (index === generatedAssets.length - 1) {
+                        status.innerHTML = `✅ ${generatedAssets.length} fichiers téléchargés ! Placez-les dans les dossiers assets correspondants.`;
+                    }
+                }, index * 200);
+            });
+        }
+        
+        // Auto-générer au chargement
+        window.onload = () => {
+            setTimeout(generateAllAssets, 500);
+        };
+    </script>
+</body>
+</html>
